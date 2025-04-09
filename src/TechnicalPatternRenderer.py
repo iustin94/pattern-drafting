@@ -441,13 +441,13 @@ class TechnicalPatternRenderer:
                 pdf.savefig(fig)
                 plt.close(fig)
 
-
     def export_all_simplified_svgs(self, base_filename: str):
         """
         Export simplified SVGs for all pattern pieces with auto-generated filenames.
-        
+        Preserves the exact sizes of all elements in the SVG.
+
         Args:
-            base_filename: Base path for output files (e.g. "my_pattern" creates 
+            base_filename: Base path for output files (e.g. "my_pattern" creates
                          "my_pattern_front_bodice.svg", "my_pattern_back.svg", etc)
         """
         if not self.pattern.pieces:
@@ -468,32 +468,44 @@ class TechnicalPatternRenderer:
             sanitized_name = piece_name.lower().replace(" ", "_")
             filename = f"{base}_{sanitized_name}{ext}"
 
-            # Create figure
-            fig = plt.figure()
-            ax = fig.add_subplot(111)
-
-            # Set up plot area
+            # Calculate viewBox parameters
             min_point, max_point = piece.get_bounding_box()
             padding = 5
-            ax.set_xlim(min_point.x - padding, max_point.x + padding)
-            ax.set_ylim(max_point.y + padding, min_point.y - padding)  # Reversed Y-axis
-            ax.axis('off')
-            ax.set_aspect('equal')
 
-            # Draw paths
-            color = self.colors.get(piece_name, 'black')
-            for path in piece.paths:
-                for segment in path:
-                    if isinstance(segment, Line):
-                        x = [segment.start.x, segment.end.x]
-                        y = [segment.start.y, segment.end.y]
-                        ax.plot(x, y, color=color, linewidth=2)
-                    elif isinstance(segment, Curve):
-                        points = segment.as_tuple_list(30)
-                        x = [p[0] for p in points]
-                        y = [p[1] for p in points]
-                        ax.plot(x, y, color=color, linewidth=2)
+            # Create SVG file directly with proper dimensions
+            with open(filename, 'w', encoding='utf-8') as f:
+                # Calculate dimensions
+                width = max_point.x - min_point.x + 2 * padding
+                height = max_point.y - min_point.y + 2 * padding
 
-            # Save and close
-            plt.savefig(filename, bbox_inches='tight', pad_inches=0, transparent=True)
-            plt.close(fig)
+                # Write SVG header with proper viewBox and dimensions in mm
+                f.write(f'<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n')
+                f.write(f'<svg xmlns="http://www.w3.org/2000/svg" ')
+                f.write(f'viewBox="{min_point.x - padding} {min_point.y - padding} {width} {height}" ')
+                f.write(f'width="{width}mm" height="{height}mm" ')
+                f.write(f'preserveAspectRatio="xMidYMid meet">\n')
+                f.write(f'<title>{piece_name}</title>\n')
+
+                # Draw paths
+                color = self.colors.get(piece_name, 'black')
+
+                for path in piece.paths:
+                    for segment in path:
+                        if isinstance(segment, Line):
+                            # Draw each line segment individually
+                            f.write(f'<line x1="{segment.start.x}" y1="{segment.start.y}" ')
+                            f.write(f'x2="{segment.end.x}" y2="{segment.end.y}" ')
+                            f.write(f'stroke="{color}" stroke-width="0.5mm" />\n')
+
+                        elif isinstance(segment, Curve):
+                            # Handle curve segments using your existing as_tuple_list method
+                            points = segment.as_tuple_list(30)  # Use the same number of points as original
+
+                            if len(points) >= 2:
+                                # Create polyline for the curve
+                                points_str = " ".join([f"{x},{y}" for x, y in points])
+                                f.write(f'<polyline points="{points_str}" ')
+                                f.write(f'fill="none" stroke="{color}" stroke-width="0.5mm" />\n')
+
+                # Close the SVG tag
+                f.write('</svg>\n')

@@ -33,7 +33,7 @@ class PantDrafter(PatternDrafter):
         FrontPantBlock(builder, self.measurements, self.ease_fitting).draft()
         BackPantBlock(builder, self.measurements, self.ease_fitting).draft()
 
-        ModifiedFrontPantBlock(builder, self.measurements, self.ease_fitting).draft()
-        ModifiedBackPantBlock(builder, self.measurements, self.ease_fitting).draft()
+        # ModifiedFrontPantBlock(builder, self.measurements, self.ease_fitting).draft()
+        # ModifiedBackPantBlock(builder, self.measurements, self.ease_fitting).draft()
 
         return builder.build()
