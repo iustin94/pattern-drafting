@@ -18,7 +18,7 @@ class Measurement(models.Model):
     close_wrist = models.FloatField(default=17.8)
     finished_length = models.FloatField(default=70.0)
 
-    # Pant measurements
+    # pant measurements
     body_rise = models.FloatField(default=28.0)
     inside_leg = models.FloatField(default=92.0)
     seat_measurement = models.FloatField(default=119.0)

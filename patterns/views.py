@@ -10,8 +10,8 @@ from django.core.files.base import ContentFile
 
 from .models import Pattern, Measurement, PatternPiece
 from .forms import MeasurementForm, PatternCreateForm
-from .pattern_engine.src.Pant.Drafter import PantDrafter
-from .pattern_engine.src.TShirt.Drafter import TShirtDrafter
+from .pattern_engine.src.pant.Drafter import PantDrafter
+from .pattern_engine.src.tshirt.Drafter import TShirtDrafter
 from .pattern_engine.src.TechnicalPatternRenderer import TechnicalPatternRenderer
 
 

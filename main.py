@@ -7,9 +7,8 @@ and export various pattern types with the new technical rendering.
 import os
 import sys
 
-from ExampleTShirt import TShirtDrafter
-from src.Pant.Drafter import PantDrafter, PantMeasurements
-from src.TechnicalPatternRenderer import TechnicalPatternRenderer
+from patterns.pattern_engine.src.pant.Drafter import PantDrafter, PantMeasurements
+from patterns.pattern_engine.src.TechnicalPatternRenderer import TechnicalPatternRenderer
 
 
 def create_output_directory(pattern_name):
