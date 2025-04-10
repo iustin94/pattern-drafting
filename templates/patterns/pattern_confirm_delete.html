@@ -1,0 +1,62 @@
+<!-- templates/patterns/measurement_form.html -->
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ title }} - Pattern Drafting System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">{{ title }}</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    {{ form.name|as_crispy_field }}
+                </div>
+            </div>
+
+            <h5 class="mb-3 mt-4">Shirt Measurements</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.chest|as_crispy_field }}
+                    {{ form.half_back|as_crispy_field }}
+                    {{ form.back_neck_to_waist|as_crispy_field }}
+                    {{ form.scye_depth|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.neck_size|as_crispy_field }}
+                    {{ form.sleeve_length|as_crispy_field }}
+                    {{ form.close_wrist|as_crispy_field }}
+                    {{ form.finished_length|as_crispy_field }}
+                </div>
+            </div>
+
+            <h5 class="mb-3 mt-4">Pants Measurements</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.body_rise|as_crispy_field }}
+                    {{ form.inside_leg|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.seat_measurement|as_crispy_field }}
+                    {{ form.waist_measurement|as_crispy_field }}
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Save Measurements</button>
+                <a href="{% url 'measurement_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <div class="card-footer">
+        <div class="alert alert-info mb-0">
+            <i class="fas fa-info-circle me-2"></i>All measurements should be in centimeters (cm)
+        </div>
+    </div>
+</div>
+{% endblock %}

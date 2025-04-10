@@ -1,0 +1,66 @@
+<<!-- templates/home.html -->
+{% extends 'base.html' %}
+
+{% block title %}Home - Pattern Drafting System{% endblock %}
+
+{% block content %}
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold mb-4">Pattern Drafting System</h1>
+    <div class="col-lg-8 mx-auto">
+        <p class="lead mb-4">
+            Create, manage, and share professional clothing patterns with our easy-to-use web application.
+            Design T-shirts, pants, and more using precise measurements and custom settings.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg px-4 gap-3">
+                    <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                </a>
+                <a href="{% url 'pattern_create' %}" class="btn btn-outline-secondary btn-lg px-4">
+                    <i class="fas fa-plus me-2"></i>Create New Pattern
+                </a>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn btn-primary btn-lg px-4 gap-3">
+                    <i class="fas fa-user-plus me-2"></i>Register Now
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg px-4">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container px-4 py-5">
+    <h2 class="pb-2 border-bottom">Key Features</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+        <div class="col d-flex align-items-start">
+            <div class="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                <i class="fas fa-ruler"></i>
+            </div>
+            <div>
+                <h3 class="fs-2">Precise Measurements</h3>
+                <p>Create and save multiple sets of body measurements for different people or projects.</p>
+            </div>
+        </div>
+        <div class="col d-flex align-items-start">
+            <div class="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                <i class="fas fa-tshirt"></i>
+            </div>
+            <div>
+                <h3 class="fs-2">Multiple Pattern Types</h3>
+                <p>Draft T-shirts, pants, and more with different fit options and customizations.</p>
+            </div>
+        </div>
+        <div class="col d-flex align-items-start">
+            <div class="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+                <i class="fas fa-file-export"></i>
+            </div>
+            <div>
+                <h3 class="fs-2">Export Options</h3>
+                <p>Download your patterns as PDF documents or SVG files ready for printing or cutting machines.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

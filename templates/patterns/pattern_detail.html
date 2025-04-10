@@ -1,0 +1,95 @@
+<!-- templates/patterns/pattern_detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ pattern.name }} - Pattern Drafting System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{{ pattern.name }}</h1>
+    <div>
+        <a href="{% url 'download_pdf' pattern.id %}" class="btn btn-primary">
+            <i class="fas fa-file-pdf me-2"></i>Download PDF
+        </a>
+        <a href="{% url 'pattern_list' %}" class="btn btn-secondary ms-2">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Pattern Details</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Type:</strong> {{ pattern.get_pattern_type_display }}</p>
+                <p><strong>Fit:</strong> {{ pattern.get_fit_type_display }}</p>
+
+                {% if pattern.pattern_type == 'TSHIRT' %}
+                    <p><strong>Sleeve:</strong> {% if pattern.short_sleeve %}Short{% else %}Long{% endif %}</p>
+                {% endif %}
+
+                <p><strong>Measurements:</strong> {{ pattern.measurement.name }}</p>
+
+                {% if pattern.description %}
+                    <p><strong>Description:</strong> {{ pattern.description }}</p>
+                {% endif %}
+
+                <p><strong>Created:</strong> {{ pattern.created_at|date:"F d, Y" }}</p>
+                <p><strong>Last Updated:</strong> {{ pattern.updated_at|date:"F d, Y" }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Key Measurements</h5>
+            </div>
+            <div class="card-body">
+                {% if pattern.pattern_type == 'TSHIRT' %}
+                    <p><strong>Chest:</strong> {{ pattern.measurement.chest }}cm</p>
+                    <p><strong>Half Back:</strong> {{ pattern.measurement.half_back }}cm</p>
+                    <p><strong>Neck Size:</strong> {{ pattern.measurement.neck_size }}cm</p>
+                    <p><strong>Sleeve Length:</strong> {{ pattern.measurement.sleeve_length }}cm</p>
+                {% elif pattern.pattern_type == 'PANTS' %}
+                    <p><strong>Waist:</strong> {{ pattern.measurement.waist_measurement }}cm</p>
+                    <p><strong>Hip:</strong> {{ pattern.measurement.seat_measurement }}cm</p>
+                    <p><strong>Body Rise:</strong> {{ pattern.measurement.body_rise }}cm</p>
+                    <p><strong>Inside Leg:</strong> {{ pattern.measurement.inside_leg }}cm</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Pattern Pieces</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for piece in pieces %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h6 class="mb-0">{{ piece.name }}</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    <div class="svg-container" style="max-height: 300px; overflow: auto;">
+                                        {{ piece.svg_content|safe }}
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'download_svg' pattern.id piece.id %}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-download me-1"></i>Download SVG
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

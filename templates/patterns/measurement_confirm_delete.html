@@ -1,0 +1,26 @@
+<!-- templates/patterns/measurement_confirm_delete.html -->
+{% extends 'base.html' %}
+
+{% block title %}Delete Measurement - Pattern Drafting System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0">Confirm Deletion</h4>
+    </div>
+    <div class="card-body">
+        <p>Are you sure you want to delete the measurement set "{{ measurement.name }}"?</p>
+
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            This action cannot be undone. Patterns that use these measurements may be affected.
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'measurement_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

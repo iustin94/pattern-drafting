@@ -1,0 +1,63 @@
+<!-- templates/patterns/measurement_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Your Measurements - Pattern Drafting System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Your Measurements</h1>
+    <a href="{% url 'measurement_create' %}" class="btn btn-success">
+        <i class="fas fa-plus me-2"></i>New Measurement
+    </a>
+</div>
+
+{% if measurements %}
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-4">Name</div>
+                <div class="col-4">Key Measurements</div>
+                <div class="col-2">Last Updated</div>
+                <div class="col-2">Actions</div>
+            </div>
+        </div>
+        <div class="list-group list-group-flush">
+            {% for measurement in measurements %}
+                <div class="list-group-item">
+                    <div class="row align-items-center">
+                        <div class="col-4">
+                            <h5 class="mb-1">{{ measurement.name }}</h5>
+                            <small class="text-muted">Created: {{ measurement.created_at|date:"M d, Y" }}</small>
+                        </div>
+                        <div class="col-4">
+                            <p class="mb-1">Chest: {{ measurement.chest }}cm</p>
+                            <p class="mb-1">Waist: {{ measurement.waist_measurement }}cm</p>
+                            <p class="mb-0">Hip: {{ measurement.seat_measurement }}cm</p>
+                        </div>
+                        <div class="col-2">
+                            {{ measurement.updated_at|date:"M d, Y" }}
+                        </div>
+                        <div class="col-2">
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'measurement_update' measurement.id %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'measurement_delete' measurement.id %}" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">You haven't created any measurements yet. Create your first measurement set to start creating patterns!</p>
+    </div>
+{% endif %}
+{% endblock %}
+
+
+

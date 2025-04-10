@@ -1,0 +1,111 @@
+<!-- templates/dashboard/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Pattern Drafting System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">Welcome, {{ user.username }}!</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-tshirt me-2"></i>Your Patterns
+                </h5>
+                <p class="card-text">You have {{ patterns_count }} saved pattern(s).</p>
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'pattern_list' %}" class="btn btn-primary">View All</a>
+                    <a href="{% url 'pattern_create' %}" class="btn btn-success">Create New</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-ruler me-2"></i>Your Measurements
+                </h5>
+                <p class="card-text">You have {{ measurements_count }} saved measurement set(s).</p>
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'measurement_list' %}" class="btn btn-primary">View All</a>
+                    <a href="{% url 'measurement_create' %}" class="btn btn-success">Create New</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Patterns</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                {% if patterns %}
+                    {% for pattern in patterns|slice:":5" %}
+                        <a href="{% url 'pattern_detail' pattern.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">{{ pattern.name }}</h6>
+                                <small class="text-muted">
+                                    {{ pattern.get_pattern_type_display }} - {{ pattern.get_fit_type_display }}
+                                    {% if pattern.pattern_type == 'TSHIRT' and pattern.short_sleeve %}
+                                        (Short Sleeve)
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{ pattern.created_at|date:"M d, Y" }}</span>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="list-group-item">
+                        <p class="mb-0">No patterns created yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+            {% if patterns_count > 5 %}
+                <div class="card-footer text-end">
+                    <a href="{% url 'pattern_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Measurements</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                {% if measurements %}
+                    {% for measurement in measurements|slice:":5" %}
+                        <a href="{% url 'measurement_update' measurement.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">{{ measurement.name }}</h6>
+                                <small class="text-muted">Chest: {{ measurement.chest }}cm, Waist: {{ measurement.waist_measurement }}cm</small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{ measurement.created_at|date:"M d, Y" }}</span>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="list-group-item">
+                        <p class="mb-0">No measurements created yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+            {% if measurements_count > 5 %}
+                <div class="card-footer text-end">
+                    <a href="{% url 'measurement_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
