@@ -4,10 +4,10 @@ T-Shirt specific measurement system.
 This module provides a specialized measurement system for T-shirts with
 convenience methods for common T-shirt measurements.
 """
-from typing import Dict, List, Any, Optional
+from typing import Dict, List
 
 from patterns.pattern_engine.src.core.MeasurementSystem import MeasurementSystem
-from patterns.pattern_engine.src.Point import Point
+from patterns.pattern_engine.src.core.Point import Point
 
 
 class TShirtMeasurements(MeasurementSystem):

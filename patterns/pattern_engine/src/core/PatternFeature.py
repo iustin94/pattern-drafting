@@ -5,11 +5,10 @@ This module provides a framework for creating and applying features like hems,
 pockets, collars, etc. to pattern blocks using a composition approach.
 """
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List, Union, Type
+from typing import Dict, Any, Optional, Type
 
-from patterns.pattern_engine.src.PatternBuilder import PatternBuilder
-from patterns.pattern_engine.src.Pattern import Pattern
-from patterns.pattern_engine.src.PatternPiece import PatternPiece
+from patterns.pattern_engine.src.core.PatternBuilder import PatternBuilder
+from patterns.pattern_engine.src.core.Pattern import Pattern
 
 
 class PatternFeature(ABC):

@@ -5,10 +5,9 @@ This script shows how to use the pattern drafting system to create, visualize,
 and export various pattern types with the new technical rendering.
 """
 import os
-import sys
 
 from patterns.pattern_engine.src.pant.Drafter import PantDrafter, PantMeasurements
-from patterns.pattern_engine.src.TechnicalPatternRenderer import TechnicalPatternRenderer
+from patterns.pattern_engine.src.core.TechnicalPatternRenderer import TechnicalPatternRenderer
 
 
 def create_output_directory(pattern_name):

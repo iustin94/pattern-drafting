@@ -6,14 +6,13 @@ properly supports curved hems.
 """
 import os
 import sys
-import math
 
 # Add the project root to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 # Import from the pattern engine package
-from patterns.pattern_engine import HemFeature, TShirtDrafter
-from patterns.pattern_engine.src.TechnicalPatternRenderer import TechnicalPatternRenderer
+from patterns.pattern_engine import TShirtDrafter
+from patterns.pattern_engine.src.core.TechnicalPatternRenderer import TechnicalPatternRenderer
 
 
 def create_output_directory(pattern_name):

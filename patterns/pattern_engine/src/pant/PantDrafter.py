@@ -4,10 +4,10 @@ Pant pattern drafter using the refactored pattern system.
 This module provides an implementation of the PatternDrafter for pants
 with support for features.
 """
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Optional
 
 from patterns.pattern_engine.src.core.PatternDrafter import PatternDrafter
-from patterns.pattern_engine.src.Pattern import Pattern
+from patterns.pattern_engine.src.core.Pattern import Pattern
 from patterns.pattern_engine.src.pant.PantBlock import FrontPantBlock, BackPantBlock
 
 

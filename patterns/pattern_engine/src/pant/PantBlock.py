@@ -4,14 +4,13 @@ Pant pattern blocks implementation using the refactored pattern system.
 This module provides implementations of pant pattern blocks including
 front and back pieces with a clean object-oriented approach.
 """
-from typing import Dict, List, Any, Optional
+from typing import Dict
 
 from patterns.pattern_engine.src.core.PatternBlock import PatternBlock
-from patterns.pattern_engine.src.PatternBuilder import PatternBuilder
+from patterns.pattern_engine.src.core.PatternBuilder import PatternBuilder
 from patterns.pattern_engine.src.pant.PantMeasurements import PantMeasurements
-from patterns.pattern_engine.src.Point import Point
-from patterns.pattern_engine.src.Line import Line
-from patterns.pattern_engine.src.Util import Util
+from patterns.pattern_engine.src.core.Point import Point
+from patterns.pattern_engine.src.core.Util import Util
 
 
 class BasePantBlock(PatternBlock):

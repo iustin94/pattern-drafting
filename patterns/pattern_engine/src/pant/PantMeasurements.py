@@ -4,10 +4,10 @@ Pant specific measurement system.
 This module provides a specialized measurement system for pants with
 convenience methods for common pant measurements.
 """
-from typing import Dict, List, Any, Optional
+from typing import Dict, List
 
 from patterns.pattern_engine.src.core.MeasurementSystem import MeasurementSystem
-from patterns.pattern_engine.src.Point import Point
+from patterns.pattern_engine.src.core.Point import Point
 
 
 class PantMeasurements(MeasurementSystem):

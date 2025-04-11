@@ -2,11 +2,11 @@ import math
 
 from typing import List
 
-from patterns.pattern_engine.src.CurveWithPeak import CurveWithPeak, CurveWithReference
-from patterns.pattern_engine.src.Line import Line
-from patterns.pattern_engine.src.Pattern import Pattern
-from patterns.pattern_engine.src.PatternPiece import PatternPiece
-from patterns.pattern_engine.src.Point import Point
+from patterns.pattern_engine.src.core.Curve import CurveWithPeak, CurveWithReference
+from patterns.pattern_engine.src.core.Line import Line
+from patterns.pattern_engine.src.core.Pattern import Pattern
+from patterns.pattern_engine.src.core.PatternPiece import PatternPiece
+from patterns.pattern_engine.src.core.Point import Point
 
 
 class PatternBuilder:
@@ -26,19 +26,19 @@ class PatternBuilder:
         """Get a measurement value."""
         return self.pattern.get_measurement(name)
 
-    def start_piece(self, name: str) -> 'PatternBuilder':
-        """Start defining a new pattern piece."""
-        self.current_piece = PatternPiece(name)
-        return self
-
-    def end_piece(self) -> 'PatternBuilder':
-        """Finish the current piece and add it to the pattern."""
-        if self.current_piece is None:
-            raise ValueError("No pattern piece is currently being defined")
-
-        self.pattern.add_piece(self.current_piece)
-        self.current_piece = None
-        return self
+    # def start_piece(self, name: str) -> 'PatternBuilder':
+    #     """Start defining a new pattern piece."""
+    #     self.current_piece = PatternPiece(name)
+    #     return self
+    #
+    # def end_piece(self) -> 'PatternBuilder':
+    #     """Finish the current piece and add it to the pattern."""
+    #     if self.current_piece is None:
+    #         raise ValueError("No pattern piece is currently being defined")
+    #
+    #     self.pattern.add_piece(self.current_piece)
+    #     self.current_piece = None
+    #     return self
 
     def add_point(self, name: str, x: float, y: float) -> 'PatternBuilder':
         """Add a point with absolute coordinates."""
@@ -147,85 +147,154 @@ class PatternBuilder:
         self.current_piece.add_point(name, intersection)
         return self
 
+    # def add_line_path(self, points: List[str]) -> 'PatternBuilder':
+    #     """Add a path connecting points with straight lines."""
+    #     if self.current_piece is None:
+    #         raise ValueError("No pattern piece is currently being defined")
+    #
+    #     if len(points) < 2:
+    #         raise ValueError("A line path must have at least 2 points")
+    #
+    #     path = []
+    #     for i in range(len(points) - 1):
+    #         start = self.current_piece.get_point(points[i])
+    #         end = self.current_piece.get_point(points[i + 1])
+    #         path.append(Line(start, end))
+    #
+    #     self.current_piece.add_path(path)
+    #     return self
+    #
+    #
+    # def add_bezier_curve(self,
+    #                      start_point_name: str,
+    #                      end_point_name: str,
+    #                      peak_value: float,
+    #                      inflection_point: float) -> 'PatternBuilder':
+    #     """
+    #     Add a Bezier curve segment to the current path.
+    #
+    #     :param curve_points: List of point names defining the curve
+    #     :param peak_value: The maximum distance the curve deviates from a straight line (default: 2)
+    #     :param inflection_point: The point (0-1) where the curve has maximum curvature (default: 0.5)
+    #     """
+    #     if self.current_piece is None:
+    #         raise ValueError("No pattern piece is currently being defined")
+    #
+    #     start_point = self.current_piece.get_point(start_point_name)
+    #     end_point = self.current_piece.get_point(end_point_name)
+    #
+    #     inflection_x = (start_point.x + end_point.x) * inflection_point
+    #     inflection_y = (start_point.y + end_point.y) * inflection_point
+    #     control_points = [Point(inflection_x, inflection_y)]
+    #
+    #     # Choose a control point based on the available points
+    #     control_point = control_points[0] if control_points else None
+    #
+    #     # Create the curve
+    #     if control_point:
+    #         curve = CurveWithPeak(start_point, end_point, peak_value, inflection_point)
+    #     else:
+    #         # Fallback to a simple line if no control points
+    #         curve = CurveWithPeak(start_point, end_point, 0, 0.5)
+    #
+    #     # Add the curve to the path
+    #     path = [curve]
+    #     self.current_piece.add_path(path)
+    #     return self
+    #
+    # def add_bezier_curve_with_reference(self,
+    #                                     start_point_name: str,
+    #                                     end_point_name: str,
+    #                                     reference_point_name: str, target_distance: float):
+    #     """
+    #     Add a Bezier curve segment with external refference point to the current path.
+    #
+    #     :param curve_points: List of point names defining the curve
+    #     :param peak_value: The maximum distance the curve deviates from a straight line (default: 2)
+    #     :param inflection_point: The point (0-1) where the curve has maximum curvature (default: 0.5)
+    #     """
+    #     if self.current_piece is None:
+    #         raise ValueError("No pattern piece is currently being defined")
+    #
+    #     start_point = self.current_piece.get_point(start_point_name)
+    #     end_point = self.current_piece.get_point(end_point_name)
+    #     reference_point = self.current_piece.get_point(reference_point_name)
+    #
+    #     # Fallback to a simple line if no control points
+    #     curve = CurveWithReference(start_point, end_point, reference_point, target_distance)
+    #
+    #     # Add the curve to the path
+    #     path = [curve]
+    #     self.current_piece.add_path(path)
+    #     return self
+
+    def start_piece(self, name: str) -> 'PatternBuilder':
+        """Start defining a new pattern piece and initialize its path."""
+        self.current_piece = PatternPiece(name)
+        self.current_path = []  # Reset path for new piece
+        return self
+
+    def end_piece(self) -> 'PatternBuilder':
+        """Finish the current piece, add accumulated path, and reset state."""
+        if self.current_piece is None:
+            raise ValueError("No pattern piece is currently being defined")
+
+        # Add the accumulated path to the piece
+        if self.current_path:
+            self.current_piece.add_path(self.current_path)
+
+        self.pattern.add_piece(self.current_piece)
+        self.current_piece = None
+        self.current_path = []
+        return self
+
     def add_line_path(self, points: List[str]) -> 'PatternBuilder':
-        """Add a path connecting points with straight lines."""
+        """Add a series of connected straight lines to the current path."""
         if self.current_piece is None:
             raise ValueError("No pattern piece is currently being defined")
 
         if len(points) < 2:
             raise ValueError("A line path must have at least 2 points")
 
-        path = []
+        # Create and append line segments to current path
         for i in range(len(points) - 1):
             start = self.current_piece.get_point(points[i])
             end = self.current_piece.get_point(points[i + 1])
-            path.append(Line(start, end))
+            self.current_path.append(Line(start, end))
 
-        self.current_piece.add_path(path)
         return self
-
 
     def add_bezier_curve(self,
                          start_point_name: str,
                          end_point_name: str,
                          peak_value: float,
                          inflection_point: float) -> 'PatternBuilder':
-        """
-        Add a Bezier curve segment to the current path.
-        
-        :param curve_points: List of point names defining the curve
-        :param peak_value: The maximum distance the curve deviates from a straight line (default: 2)
-        :param inflection_point: The point (0-1) where the curve has maximum curvature (default: 0.5)
-        """
+        """Add a Bezier curve segment to the current path."""
         if self.current_piece is None:
             raise ValueError("No pattern piece is currently being defined")
 
+        # Create curve and add to current path
         start_point = self.current_piece.get_point(start_point_name)
         end_point = self.current_piece.get_point(end_point_name)
-
-        inflection_x = (start_point.x + end_point.x) * inflection_point
-        inflection_y = (start_point.y + end_point.y) * inflection_point
-        control_points = [Point(inflection_x, inflection_y)]
-
-        # Choose a control point based on the available points
-        control_point = control_points[0] if control_points else None
-
-        # Create the curve
-        if control_point:
-            curve = CurveWithPeak(start_point, end_point, peak_value, inflection_point)
-        else:
-            # Fallback to a simple line if no control points
-            curve = CurveWithPeak(start_point, end_point, 0, 0.5)
-
-        # Add the curve to the path
-        path = [curve]
-        self.current_piece.add_path(path)
+        curve = CurveWithPeak(start_point, end_point, peak_value, inflection_point)
+        self.current_path.append(curve)
         return self
 
     def add_bezier_curve_with_reference(self,
                                         start_point_name: str,
                                         end_point_name: str,
-                                        reference_point_name: str, target_distance: float):
-        """
-        Add a Bezier curve segment with external refference point to the current path.
-
-        :param curve_points: List of point names defining the curve
-        :param peak_value: The maximum distance the curve deviates from a straight line (default: 2)
-        :param inflection_point: The point (0-1) where the curve has maximum curvature (default: 0.5)
-        """
+                                        reference_point_name: str,
+                                        target_distance: float) -> 'PatternBuilder':
+        """Add a reference-controlled Bezier curve to the current path."""
         if self.current_piece is None:
             raise ValueError("No pattern piece is currently being defined")
 
+        # Create curve and add to current path
         start_point = self.current_piece.get_point(start_point_name)
         end_point = self.current_piece.get_point(end_point_name)
         reference_point = self.current_piece.get_point(reference_point_name)
-
-        # Fallback to a simple line if no control points
         curve = CurveWithReference(start_point, end_point, reference_point, target_distance)
-
-        # Add the curve to the path
-        path = [curve]
-        self.current_piece.add_path(path)
+        self.current_path.append(curve)
         return self
 
     def set_fold_line(self, start_point: str, end_point: str) -> 'PatternBuilder':

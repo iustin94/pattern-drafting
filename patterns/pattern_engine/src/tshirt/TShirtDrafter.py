@@ -4,13 +4,13 @@ T-Shirt pattern drafter using the refactored pattern system.
 This module provides an implementation of the PatternDrafter for T-shirts
 with support for features and different sleeve options.
 """
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Optional
 
 from patterns.pattern_engine.src.core.PatternDrafter import PatternDrafter
-from patterns.pattern_engine.src.Pattern import Pattern
-from patterns.pattern_engine.src.tshirt.TShirtBlock import (
-    FrontTShirtBlock, BackTShirtBlock, LongSleeveBlock
-)
+from patterns.pattern_engine.src.core.Pattern import Pattern
+from patterns.pattern_engine.src.tshirt.LongSleeveBlock import LongSleeveBlock
+from patterns.pattern_engine.src.tshirt.FrontTShirtBlock import FrontTShirtBlock
+from patterns.pattern_engine.src.tshirt.BackTShirtBlock import BackTShirtBlock
 from patterns.pattern_engine.src.tshirt.ShortSleeveBlock import ShortSleeveBlock
 
 
@@ -62,18 +62,18 @@ class TShirtDrafter(PatternDrafter):
         builder = self.create_pattern(pattern_name)
 
         # Create and draft the front piece
-        front_block = FrontTShirtBlock(builder, self.measurements, self.ease_fitting)
+        front_block = FrontTShirtBlock(builder, self.measurements, pattern_name, self.ease_fitting)
         front_block.draft()
 
         # Create and draft the back piece
-        back_block = BackTShirtBlock(builder, self.measurements, self.ease_fitting)
+        back_block = BackTShirtBlock(builder, self.measurements, pattern_name, self.ease_fitting)
         back_block.draft()
 
         # Create and draft the appropriate sleeve piece
         if self.short_sleeve:
-            sleeve_block = ShortSleeveBlock(builder, self.measurements, self.ease_fitting)
+            sleeve_block = ShortSleeveBlock(builder, self.measurements, pattern_name, self.ease_fitting)
         else:
-            sleeve_block = LongSleeveBlock(builder, self.measurements, self.ease_fitting)
+            sleeve_block = LongSleeveBlock(builder, self.measurements, pattern_name, self.ease_fitting)
 
         sleeve_block.draft()
 

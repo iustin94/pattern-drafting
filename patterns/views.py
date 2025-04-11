@@ -12,7 +12,7 @@ from .models import Pattern, Measurement, PatternPiece
 from .forms import MeasurementForm, PatternCreateForm
 from .pattern_engine.src.pant.Drafter import PantDrafter
 from .pattern_engine.src.tshirt.Drafter import TShirtDrafter
-from .pattern_engine.src.TechnicalPatternRenderer import TechnicalPatternRenderer
+from patterns.pattern_engine.src.core.TechnicalPatternRenderer import TechnicalPatternRenderer
 
 
 @login_required

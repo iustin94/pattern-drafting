@@ -5,10 +5,10 @@ This module provides abstract base classes for pattern blocks with standardized
 interfaces for drafting, point creation, and path generation.
 """
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, List
 
 from patterns.pattern_engine.src.core.MeasurementSystem import MeasurementSystem
-from patterns.pattern_engine.src.PatternBuilder import PatternBuilder
+from patterns.pattern_engine.src.core.PatternBuilder import PatternBuilder
 
 
 class PatternBlock(ABC):
@@ -38,13 +38,17 @@ class PatternBlock(ABC):
         self.builder = builder
         self.piece_name = piece_name
         self.ease_fitting = ease_fitting
-        
+
         # Create measurement system if not already created by a subclass
         if not hasattr(self, 'measurements_system'):
             self.measurements_system = MeasurementSystem(measurements, ease_fitting)
         
         # Note: init_calculations() is no longer called from the constructor
         # Subclasses should call it explicitly when needed
+
+    @property
+    def measurements(self) -> MeasurementSystem:
+        return self.measurements_system
     
     def init_calculations(self) -> None:
         """

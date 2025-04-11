@@ -1,4 +1,4 @@
-from patterns.pattern_engine.src.Point import Point
+from patterns.pattern_engine.src.core.Point import Point
 
 
 class Util:
