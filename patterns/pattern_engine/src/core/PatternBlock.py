@@ -7,8 +7,8 @@ interfaces for drafting, point creation, and path generation.
 from abc import ABC, abstractmethod
 from typing import Dict, Any, List
 
-from patterns.pattern_engine.src.core.MeasurementSystem import MeasurementSystem
-from patterns.pattern_engine.src.core.PatternBuilder import PatternBuilder
+from .MeasurementSystem import MeasurementSystem
+from .PatternBuilder import PatternBuilder
 
 
 class PatternBlock(ABC):

@@ -13,8 +13,8 @@ from matplotlib.patches import Rectangle
 from matplotlib.gridspec import GridSpec
 from typing import List, Tuple, Optional
 
-from patterns.pattern_engine.src.core.Pattern import Pattern
-from patterns.pattern_engine.src.core.PatternPiece import PatternPiece
+from .Pattern import Pattern
+from .PatternPiece import PatternPiece
 
 
 class TechnicalPatternRenderer:

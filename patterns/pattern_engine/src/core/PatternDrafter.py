@@ -1,6 +1,6 @@
 from typing import Dict
 
-from patterns.pattern_engine.src.core.PatternBuilder import PatternBuilder
+from .PatternBuilder import PatternBuilder
 
 
 class PatternDrafter:

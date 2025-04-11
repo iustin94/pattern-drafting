@@ -1,65 +1,102 @@
 """
-Pant pattern drafter using the refactored pattern system.
+Pant pattern drafter with hem feature support.
 
-This module provides an implementation of the PatternDrafter for pants
-with support for features.
+This module extends the PantDrafter to add specific support for the hem feature.
 """
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from patterns.pattern_engine.src.core.PatternDrafter import PatternDrafter
 from patterns.pattern_engine.src.core.Pattern import Pattern
-from patterns.pattern_engine.src.pant.PantBlock import FrontPantBlock, BackPantBlock
+from patterns.pattern_engine.src.features.HemFeature import HemFeature
 
 
-class PantDrafter(PatternDrafter):
+class PantDrafterWithHem(PantDrafter):
     """
-    Pant pattern drafter with feature support.
+    Extended pant pattern drafter with integrated hem feature support.
 
-    This class drafts complete pant patterns with options for ease fitting
-    plus support for additional features.
+    This class extends the base PantDrafter to provide specialized
+    handling for hem features in pants.
     """
 
     def __init__(
             self,
             measurements: Optional[Dict[str, float]] = None,
             ease_fitting: bool = False,
-            features: Optional[List] = None
+            features: Optional[List] = None,
+            hem_width: float = 2.0,
+            include_hem: bool = True
     ):
         """
-        Initialize the pant drafter.
+        Initialize the pant drafter with hem support.
 
         Args:
             measurements: Raw measurements dictionary
             ease_fitting: Whether to use ease fitting (looser fit)
-            features: List of features to apply
+            features: List of additional features to apply
+            hem_width: Width of the hem in cm
+            include_hem: Whether to include the hem feature
         """
-        super().__init__(measurements, features)
-        self.ease_fitting = ease_fitting
+        # Initialize with base features
+        self.hem_width = hem_width
+        self.include_hem = include_hem
+        
+        # Create features list if not provided
+        if features is None:
+            features = []
+            
+        # Add hem feature if requested
+        if include_hem:
+            hem_feature = HemFeature(
+                hem_width=hem_width,
+                fold_line=True,
+                piece_names=["Front", "Back"]
+            )
+            features.append(hem_feature)
+            
+        # Initialize parent class
+        super().__init__(measurements, ease_fitting, features)
 
-        # Validate measurements
-        if not measurements:
-            raise ValueError("No measurements provided")
-
-    def _create_base_pattern(self) -> Pattern:
+    def create_pattern(self, name: str, pants_length: Optional[str] = None) -> Pattern:
         """
-        Create the base pant pattern before applying features.
+        Create a complete pant pattern with hem.
+
+        Args:
+            name: Name of the pattern
+            pants_length: Optional length style (full, capri, shorts)
 
         Returns:
-            The base pant pattern
+            Completed pattern with hem
         """
-        # Create pattern name
-        pattern_type = "Easy Fitting" if self.ease_fitting else "Standard Fit"
-        pattern_name = f"{pattern_type} Pants"
+        # Modify pattern name based on hem inclusion
+        if self.include_hem:
+            name = f"{name} with {self.hem_width}cm Hem"
+            
+        # Create the base pattern
+        pattern = super()._create_base_pattern()
+        
+        # Apply any features not already applied
+        self._apply_features(pattern)
+        
+        return pattern
 
-        # Create builder
-        builder = self.create_pattern(pattern_name)
 
-        # Create and draft the front piece
-        front_block = FrontPantBlock(builder, self.measurements, self.ease_fitting)
-        front_block.draft()
-
-        # Create and draft the back piece
-        back_block = BackPantBlock(builder, self.measurements, self.ease_fitting)
-        back_block.draft()
-
-        return builder.build()
+# Example usage:
+if __name__ == "__main__":
+    # Sample measurements (in cm)
+    measurements = {
+        'waist_measurement': 80,
+        'seat_measurement': 98,
+        'inside_leg': 76,
+        'body_rise': 28
+    }
+    
+    # Create a pant pattern with hem
+    drafter = PantDrafterWithHem(
+        measurements=measurements,
+        ease_fitting=True,
+        hem_width=3.0
+    )
+    
+    pattern = drafter.create_pattern("Classic Pants")
+    
+    # Further processing...

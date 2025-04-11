@@ -10,7 +10,7 @@ from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
-from patterns.pattern_engine.src.core.PatternPiece import PatternPiece
+from .PatternPiece import PatternPiece
 
 
 class Pattern:

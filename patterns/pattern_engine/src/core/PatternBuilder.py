@@ -2,11 +2,11 @@ import math
 
 from typing import List
 
-from patterns.pattern_engine.src.core.Curve import CurveWithPeak, CurveWithReference
-from patterns.pattern_engine.src.core.Line import Line
-from patterns.pattern_engine.src.core.Pattern import Pattern
-from patterns.pattern_engine.src.core.PatternPiece import PatternPiece
-from patterns.pattern_engine.src.core.Point import Point
+from .Curve import Curve, CurveWithPeak, CurveWithReference
+from .Line import Line
+from .Pattern import Pattern
+from .PatternPiece import PatternPiece
+from .Point import Point
 
 
 class PatternBuilder:
@@ -260,7 +260,7 @@ class PatternBuilder:
         for i in range(len(points) - 1):
             start = self.current_piece.get_point(points[i])
             end = self.current_piece.get_point(points[i + 1])
-            self.current_path.append(Line(start, end))
+            self.current_piece.add_path([Line(start, end)])
 
         return self
 

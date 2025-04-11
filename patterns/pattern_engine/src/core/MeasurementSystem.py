@@ -6,7 +6,6 @@ pattern measurements with proper ease calculation.
 """
 from typing import Dict, List, Any, Optional, TypeVar, Generic, Union
 
-
 class MeasurementSystem:
     """
     Central system for managing pattern measurements with validation.

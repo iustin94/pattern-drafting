@@ -8,7 +8,7 @@ from typing import List, Tuple, Optional
 
 from shapely.geometry import LineString
 
-from patterns.pattern_engine.src.core.Point import Point
+from .Point import Point
 
 
 class Line:
